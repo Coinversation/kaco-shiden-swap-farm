@@ -9,6 +9,32 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract SyrupBar is ERC20("SyrupBar Token", "SYRUP"), Ownable {
     using SafeMath for uint256;
 
+    mapping(address => uint256) public debt;
+
+    IERC20 public kaco;
+
+    constructor(IERC20 _kaco) {
+        kaco = _kaco;
+    }
+
+    function deposit(uint256 _amount) external {
+        require(kaco.transferFrom(msg.sender, address(this), _amount), "transfer failed");
+        debt[msg.sender] += _amount;
+    }
+
+    function withdraw(uint256 _amount) external {
+        require(debt[msg.sender] >= _amount, "not enough debt");
+        require(kaco.balanceOf(address(this)) >= _amount, "not enough kac");
+        debt[msg.sender] -= _amount;
+        kaco.transfer(msg.sender, _amount);
+    }
+
+    // Safe Kaco transfer function, just in case if rounding error causes pool to not have enough Kacos.
+    function safeKacTransfer(address _to, uint256 _amount) external onlyOwner {
+        require(kaco.balanceOf(address(this)) > _amount, "pool kac not enough");
+        kaco.transfer(_to, _amount);
+    }
+
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
     function mint(address _to, uint256 _amount) external onlyOwner {
         _mint(_to, _amount);
@@ -18,20 +44,6 @@ contract SyrupBar is ERC20("SyrupBar Token", "SYRUP"), Ownable {
     function burn(address _from, uint256 _amount) external onlyOwner {
         _burn(_from, _amount);
         _moveDelegates(_delegates[_from], address(0), _amount);
-    }
-
-    // The Kaco TOKEN!
-    IERC20 public kaco;
-
-    constructor(IERC20 _kaco) {
-        kaco = _kaco;
-    }
-
-    // Safe Kaco transfer function, just in case if rounding error causes pool to not have enough Kacos.
-    function safeKacTransfer(address _to, uint256 _amount) external onlyOwner {
-        uint256 kacBal = kaco.balanceOf(address(this));
-        require(kacBal > _amount, "pool kac not enough");
-        kaco.transfer(_to, _amount);
     }
 
     // Copied and modified from YAM code:
