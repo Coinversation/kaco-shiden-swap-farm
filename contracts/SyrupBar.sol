@@ -13,20 +13,26 @@ contract SyrupBar is ERC20("SyrupBar Token", "SYRUP"), Ownable {
 
     IERC20 public kaco;
 
+    event DebtChange(address indexed owner, uint amount);
+
     constructor(IERC20 _kaco) {
         kaco = _kaco;
     }
 
     function deposit(uint256 _amount) external {
         require(kaco.transferFrom(msg.sender, address(this), _amount), "transfer failed");
-        debt[msg.sender] += _amount;
+        uint newAmount = debt[msg.sender] + _amount;
+        debt[msg.sender] = newAmount;
+        emit DebtChange(msg.sender, newAmount);
     }
 
     function withdraw(uint256 _amount) external {
         require(debt[msg.sender] >= _amount, "not enough debt");
         require(kaco.balanceOf(address(this)) >= _amount, "not enough kac");
-        debt[msg.sender] -= _amount;
+        uint newAmount = debt[msg.sender] - _amount;
+        debt[msg.sender] = newAmount;
         kaco.transfer(msg.sender, _amount);
+        emit DebtChange(msg.sender, newAmount);
     }
 
     // Safe Kaco transfer function, just in case if rounding error causes pool to not have enough Kacos.
