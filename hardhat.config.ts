@@ -51,13 +51,19 @@ const config: HardhatUserConfig = {
       gasPrice: 1000000000,
       accounts: {mnemonic: mnemonic}
     },
+    bscmainnet: {
+      url: "https://bsc-dataseed.binance.org/",
+      chainId: 56,
+      gasPrice: 5000000000,
+      accounts: {mnemonic: mnemonic}
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: BSCSCANAPIKEY,
   },
   mocha: {
     timeout: 120000

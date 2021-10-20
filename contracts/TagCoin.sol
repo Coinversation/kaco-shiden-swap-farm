@@ -20,6 +20,8 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * Finally, the non-standard {decreaseAllowance} and {increaseAllowance}
  * functions have been added to mitigate the well-known issues around setting
  * allowances. See {IERC20-approve}.
+ *
+ * Deployed to BSC
  */
 contract TagCoin is Context, IERC20, IERC20Metadata {
     mapping(address => uint256) private _balances;

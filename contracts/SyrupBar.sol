@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 // SyrupBar with Governance.
-contract SyrupBar is ERC20("SyrupBar Token", "SYRUP"), Ownable {
+contract SyrupBar is ERC20("Kaco Shiden SyrupBar", "SYRUP"), Ownable {
     using SafeMath for uint256;
 
     mapping(address => uint256) public debt;
