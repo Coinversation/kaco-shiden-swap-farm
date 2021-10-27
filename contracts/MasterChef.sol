@@ -141,7 +141,7 @@ contract MasterChef is Ownable {
         uint256 _allocShiden,
         bool _withUpdate
     ) internal {
-        kacPerShidenBlock = _allocShiden / (_allocBSC + _allocShiden) * _kacPerBlock * 4;
+        kacPerShidenBlock = (_allocShiden * 1e12 / (_allocBSC + _allocShiden) * _kacPerBlock * 4) / 1e12;
         if (_withUpdate) {
             massUpdatePools();
         }

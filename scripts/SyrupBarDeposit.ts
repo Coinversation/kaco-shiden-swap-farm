@@ -12,21 +12,24 @@ const bridgeAddress = "0xE7929a6f19B685A6F2C3Fa962054a82B79DC999F";
 const kacoBSCAddress = "0xf96429A7aE52dA7d07E60BE95A3ece8B042016fB";
 const kacoAddress = "0xb12c13e66ade1f72f71834f2fc5082db8c091358";
 
-const masterChefShidenAddress = "0xf96429A7aE52dA7d07E60BE95A3ece8B042016fB";
-const syrupShidenAddress = "0x3Ac06B3DDf753369289c1C35f7fcbc38c73e91aC";
+const masterChefShidenAddress = "0x293A7824582C56B0842535f94F6E3841888168C8";
+const syrupShidenAddress = "0x808764026aDddb9E7dFAAEA846977cCe6425D593";
 
 async function main() {
   // We get the contract to deploy
-  const farm = await ethers.getContractAt("MasterChef", masterChefShidenAddress, await ethers.getSigner(mainAddress));
+  // const kaco = await ethers.getContractAt("IERC20", kacoAddress, await ethers.getSigner(bridgeAddress));
 
-  console.log("pool length: ", await farm.poolLength());
+  // console.log("approve kac to syrup contract: ", await kaco.approve(syrupShidenAddress, "3650000000000000000000000"));
 
-  await farm.add(0, "0x456C0082DE0048EE883881fF61341177FA1FEF40", false);
-  await sleep(24000);
-  console.log("pool length: ", await farm.poolLength());
+  const syrup = await ethers.getContractAt("SyrupBar", syrupShidenAddress, await ethers.getSigner(bridgeAddress));
 
-// console.log("pool info:", await farm.poolInfo(0));
-// console.log("pool length:", await farm.poolLength());
+  console.log("dept: ", (await syrup.debt(bridgeAddress)).toString());
+
+  await syrup.deposit("1000000000000000000000");
+  // await syrup.withdraw("1000000000000000000000");
+
+  await sleep(31000);
+  console.log("dept: ", (await syrup.debt(bridgeAddress)).toString());
 }
 
 function sleep(ms:number) {

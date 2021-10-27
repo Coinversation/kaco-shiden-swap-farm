@@ -16,16 +16,12 @@ const syrupShidenAddress = "0x808764026aDddb9E7dFAAEA846977cCe6425D593";
 
 async function main() {
   // We get the contract to deploy
-  const provider = ethers.getDefaultProvider("https://rpc.shiden.astar.network:8545");
+  const provider = ethers.getDefaultProvider("https://bsc-dataseed.binance.org/");
   await sleep(3000);
   console.log("chain id:", provider.network.chainId);
 
-  for(let i = 0; i < 100; i++){
-    const block = await provider.getBlock("latest");
-    console.log("current block:", block.number);
-    console.log("block time: ", block.timestamp);
-    await sleep(3000);
-  }
+  console.log("tran 1:", await provider.getTransaction("0x143e848eba91ed5c0884ecb8f61c336cdc564a4508a91ebd95ae0855d7bddfac"));
+  console.log("tran 2:", await provider.getTransaction("0xf796e3ed6b537b5acb4164337170f365894687eceba3ef59b4a17391bd47a0c0"));
 }
 
 function sleep(ms:number) {
